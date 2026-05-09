@@ -24,9 +24,9 @@ pipeline{
             steps{
                 echo "hello"
                 sh"""
-                    cp /var/jenkins_home/workspace/tomcat/target/*.war /opt/tomcat/webapps/
+                    cp /var/jenkins_home/workspace/tomcat/target/*.war /home/ubuntu/tomcat/webapps/
                 """
-                dir("/opt/tomcat/webapps/"){
+                dir("/home/ubuntu/tomcat/webapps/"){
                     sh"""
                     jar -xvf *.war
                     cp -r /home/ubuntu/tomcat/webapps/java-tomcat-maven-example/* ROOT/
