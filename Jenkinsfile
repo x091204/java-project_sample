@@ -1,7 +1,7 @@
 pipeline{
 
     agent any
-    
+
     tools{
         maven "maven123"
     }
@@ -24,7 +24,7 @@ pipeline{
             steps{
                 echo "hello"
                 sh"""
-                    cp /home/ubuntu/jenkins/workspace/demo/target/*.war /opt/tomcat/webapps/
+                    cp /home/ubuntu/jenkins/workspace/tomcat/target/*.war /opt/tomcat/webapps/
                 """
                 dir("/opt/tomcat/webapps/"){
                     sh"""
