@@ -1,52 +1,45 @@
 pipeline{
-
-agent none
-
-    options {
-    skipDefaultCheckout true
+    agent {
+        label "node1"
     }
-
-   stages{
- 
-    stage("build"){
-        agent{
-            label 'node2'
-        }
-        steps{
-            echo "build stage"
+    tools{
+        maven "maven123"
+    }
+    options{
+        skipDefaultCheckout(true)
+    }
+    stages{
+        stage("clone"){
+            steps{
             checkout scm
-            sh "mvn package"
-            stash name: 'build', includes: 'target/*.war'
+            }
         }
-    }
-    stage('unstash'){
-        agent{
-            label 'node1'
+        stage("build"){
+            steps{
+                echo "build stage2"
+                sh"mvn clean package"
+            }
         }
-        steps{
-            sh "mkdir -p unstash"
-            dir('unstash'){
-                unstash 'build'
+        stage("deploy"){
+            steps{
+                echo "hello"
+                sh"""
+                    cp /home/ubuntu/jenkins/workspace/demo/target/*.war /opt/tomcat/webapps/
+                """
+                dir("/opt/tomcat/webapps/"){
+                    sh"""
+                    jar -xvf *.war
+                    cp -r /opt/tomcat/webapps/java-tomcat-maven-example/* ROOT/
+
+                    """
+                }
+            }
+            
+        }
+        stage("cleanup"){
+            steps{
+                sh"rm -rf /opt/tomcat/webapps/java-tomcat-maven-example*"
             }
         }
     }
-    stage('deploy'){
-        agent{
-            label 'node1'
-        }
-        steps{
-         sh "sudo rm -rf /opt/tomcat/myapp_dir/*"
-        dir('unstash/target/'){
-            sh "sudo mv *.war /opt/tomcat/myapp_dir/ && cd /opt/tomcat/myapp_dir/ &&  \
-            sudo jar -xvf *.war && \
-            sudo rm -f *.war "
-        }
-        }
-
-    }
-    stage('restart tomcat'){
-        sh "sudo systemctl restart tomcat.service"
-    }
-    
-   }
 }
