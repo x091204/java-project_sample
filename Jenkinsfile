@@ -24,7 +24,7 @@ pipeline{
             steps{
                 echo "hello"
                 sh"""
-                    cp /home/ubuntu/jenkins/workspace/tomcat/target/*.war /opt/tomcat/webapps/
+                    cp /var/jenkins_home/workspace/tomcat/target/*.war /opt/tomcat/webapps/
                 """
                 dir("/opt/tomcat/webapps/"){
                     sh"""
