@@ -38,7 +38,7 @@ pipeline{
         }
         stage("cleanup"){
             steps{
-                sh"rm -rf opt/tomcat/webapps/java-tomcat-maven-example*"
+                sh"rm -rf /home/ubuntu/tomcat/webapps/java-tomcat-maven-example**"
             }
         }
     }
